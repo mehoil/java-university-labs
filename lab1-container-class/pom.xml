@@ -8,7 +8,7 @@
     <parent>
         <groupId>ru.mehoil</groupId>
         <artifactId>java-labs</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>lab1-container-class</artifactId>
