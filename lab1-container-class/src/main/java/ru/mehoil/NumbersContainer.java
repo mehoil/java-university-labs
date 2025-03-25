@@ -25,12 +25,12 @@ public class NumbersContainer {
 
     public void put(final int index, final long number) {
         validateIndex(index);
-        if (currentSize + 1 > maxSize) {
-            resize();
+        if (index == currentSize) {
+            putLast(number);
+        } else {
+            shiftRightAt(index);
+            numbers[index] = number;
         }
-
-        shiftRightAt(index);
-        numbers[index] = number;
     }
 
     public void putFirst(final long number) {
@@ -43,6 +43,10 @@ public class NumbersContainer {
             resize();
         }
         numbers[currentSize++] = number;
+    }
+
+    public void putAll(final long[] numbers) {
+        putArray(numbers);
     }
 
     public void remove(final int index) {
@@ -74,10 +78,65 @@ public class NumbersContainer {
         return numbers[currentSize - 1];
     }
 
+    public int getSize() {
+        return currentSize;
+    }
+
     public boolean isEmpty() {
         return currentSize == 0;
     }
 
+    public void clear() {
+        currentSize = 0;
+        maxSize = INITIAL_SIZE;
+        numbers = new long[maxSize];
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof final NumbersContainer other)) {
+            return false;
+        }
+
+        if (currentSize != other.currentSize) {
+            return false;
+        }
+        for (int i = 0; i < currentSize; i++) {
+            if (numbers[i] != other.numbers[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = currentSize;
+        for (int i = 0; i < currentSize; i++) {
+            result = 31 * result + Long.hashCode(numbers[i]);
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        if (isEmpty()) {
+            return "[]";
+        }
+
+        final var sb = new StringBuilder("[");
+        for (int i = 0; i < currentSize - 1; i++) {
+            sb.append(numbers[i]);
+            sb.append(", ");
+        }
+        sb.append(numbers[currentSize - 1]);
+        sb.append("]");
+
+        return sb.toString();
+    }
 
     private void shiftLeftAt(final int index) {
         validateIndex(index);
@@ -85,11 +144,10 @@ public class NumbersContainer {
             throw new IllegalArgumentException("Cannot shift array to the left if it's empty");
         }
 
-        currentSize--;
         for (int i = index; i < currentSize - 1; i++) {
             numbers[i] = numbers[i + 1];
         }
-        numbers[currentSize - 1] = 0;
+        currentSize--;
     }
 
     private void shiftRightAt(final int index) {
@@ -98,44 +156,41 @@ public class NumbersContainer {
             resize();
         }
 
-        currentSize++;
-        for (int i = currentSize - 1; i > index; i--) {
+        for (int i = currentSize; i > index; i--) {
             numbers[i] = numbers[i - 1];
         }
+        currentSize++;
+
         numbers[index] = 0;
     }
 
     private void putArray(final long[] numbers) {
-        final int estimatedSize = this.currentSize + numbers.length;
-        if (estimatedSize > maxSize) {
-            final long totalSum = this.numbers.length + numbers.length;
-            final long totalSize = (long) (totalSum * RESIZING_FACTOR);
+        final int newNumbersSize = numbers.length;
+        final int requiredSize = currentSize + newNumbersSize;
 
-            if (totalSum >= Integer.MAX_VALUE) {
-                throw new IllegalArgumentException("The array size exceeds its maximum size");
-            }
-
-            if (totalSize > Integer.MAX_VALUE) {
-                resize(Integer.MAX_VALUE);
-            } else {
-                resize((int) totalSize);
-            }
+        if (requiredSize > maxSize) {
+            final int newSize = (int) Math.min(
+                    requiredSize * RESIZING_FACTOR,
+                    Integer.MAX_VALUE
+            );
+            resize(newSize);
+        }
+        for (int i = 0; i < newNumbersSize; i++) {
+            this.numbers[currentSize + i] = numbers[i];
         }
 
-        for (int i = currentSize; i < numbers.length; i++) {
-            this.numbers[i] = numbers[i];
-        }
-        currentSize = currentSize + numbers.length;
+        currentSize += newNumbersSize;
     }
 
     private void resize(final int newSize) {
-        final long[] oldNumbers = this.numbers;
-        this.numbers = new long[newSize];
-        this.maxSize = newSize;
-
-        for (int i = 0; i < maxSize; i++) {
-            this.numbers[i] = oldNumbers[i];
+        final long[] newNumbers = new long[newSize];
+        for (int i = 0; i < currentSize && i < newSize; i++) {
+            newNumbers[i] = numbers[i];
         }
+
+        currentSize = Math.min(currentSize, newSize);
+        numbers = newNumbers;
+        maxSize = newSize;
     }
 
     private void resize() {
@@ -147,7 +202,7 @@ public class NumbersContainer {
     }
 
     private void validateIndex(final int index) {
-        if (index < 0 || index >= currentSize) {
+        if (index < 0 || index > currentSize) {
             throw new IllegalArgumentException("Index is not within bounds");
         }
     }

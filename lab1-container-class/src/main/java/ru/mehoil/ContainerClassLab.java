@@ -7,7 +7,11 @@ package ru.mehoil;
  * @version 1.0
  */
 public class ContainerClassLab {
+
     public static void main(final String[] args) {
-        System.out.println("Hello world!");
+        final long[] numbers = new long[]{11, 22, 33, 44, 55};
+        final var nc = new NumbersContainer(numbers);
+        System.out.println(nc);
+
     }
 }
