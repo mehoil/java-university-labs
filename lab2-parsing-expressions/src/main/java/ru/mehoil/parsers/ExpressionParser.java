@@ -48,7 +48,7 @@ public class ExpressionParser {
             final var parsedSYA = ShuntingYardParser.parseArithmeticalExpression(tokens);
             return ShuntingYardParser.solveParsedExpression(parsedSYA, variableValues);
         } catch (final Exception e) {
-            System.out.println(e.getMessage() != null ? e.getMessage() : "Error: invalid value");
+            System.err.println(e.getMessage() != null ? e.getMessage() : "Error: invalid value");
             return Double.NaN;
         }
     }

@@ -11,6 +11,7 @@ import static ru.mehoil.parsers.ExpressionParser.parse;
 public class ParsingExpressionsLab {
     public static void main(final String[] args) {
         final String[] expressions = {
+                "1 2 3 . 4/ 1 2 3 . 5 +",
                 "4 + (10 * (20 - 19 * (30 + 1))) + 7 * (2 - 1)",
                 "sin(3.14) + x * 2",
                 "a + b * 3",
