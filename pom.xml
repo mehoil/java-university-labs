@@ -13,6 +13,7 @@
 
     <modules>
         <module>lab1-container-class</module>
+        <module>lab2-parsing-expressions</module>
     </modules>
 
     <properties>
