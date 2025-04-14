@@ -1,5 +1,7 @@
 package ru.mehoil;
 
+import java.util.Scanner;
+
 import static ru.mehoil.parsers.ExpressionParser.parse;
 
 /**
@@ -10,20 +12,16 @@ import static ru.mehoil.parsers.ExpressionParser.parse;
  */
 public class ParsingExpressionsLab {
     public static void main(final String[] args) {
-        final String[] expressions = {
-                "1 2 3 . 4/ 1 2 3 . 5 +",
-                "4 + (10 * (20 - 19 * (30 + 1))) + 7 * (2 - 1)",
-                "sin(3.14) + x * 2",
-                "a + b * 3",
-                "2 + )3("
-        };
-        for (String expr : expressions) {
-            System.out.println("Given expression: " + expr);
-            double result = parse(expr);
-            if (!Double.isNaN(result)) {
-                System.out.println("Result: " + result);
+        final var scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            final var expression = scanner.nextLine();
+            if (expression.equalsIgnoreCase("exit")) {
+                break;
             }
-            System.out.println();
+            final var result = parse(expression);
+            if (!Double.isNaN(result)) {
+                System.out.println("=> " + result);
+            }
         }
     }
 }
