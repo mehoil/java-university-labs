@@ -16,6 +16,7 @@
         <module>lab2-parsing-expressions</module>
         <module>lab3-collections-analysis</module>
         <module>lab4-parsing-csv</module>
+        <module>lab5-reflection-api</module>
     </modules>
 
     <properties>
