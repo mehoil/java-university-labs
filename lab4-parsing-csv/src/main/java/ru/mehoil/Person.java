@@ -3,6 +3,12 @@ package ru.mehoil;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Person model.
+ *
+ * @author Mikhail Dorokhov
+ * @version 1.0
+ */
 public record Person(
         long id,
         String name,
